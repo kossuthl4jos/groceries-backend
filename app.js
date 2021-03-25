@@ -1,7 +1,11 @@
-var http = require('http');
-console.log('Server is listening...');
+const express = require('express');
+const app = express();
 
-http.createServer(function (req, res) {
+app.listen(3001, function() {
+  console.log('Listening on 3001...')
+})
+
+app.get('/lists', function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World! from the server');
-}).listen(8080);
+  res.end('Sending lists...');
+})
