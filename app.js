@@ -7,5 +7,10 @@ app.listen(3001, function() {
 
 app.get('/lists', function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Sending lists...');
+  res.end('Sending lists... with restarting server');
+})
+
+app.post('/list', function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Adding a new list');
 })
