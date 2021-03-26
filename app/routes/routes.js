@@ -15,6 +15,20 @@ module.exports = function (app, db) {
     });
   });
 
+  app.delete('/list/:id', function (req, res) {
+    const id = req.params.id;
+    const deatils = { _id: new ObjectID(id) };
+
+    db.collection('testCol').deleteOne(deatils, (err, item) => {
+      if (err) {
+        console.log(err);
+        res.send({ error: 'An error has occured' });
+      } else {
+        res.send('List ' + id + ' deleted!');
+      }
+    });
+  });
+
   app.get('/list/:id', function (req, res) {
     const id = req.params.id;
     const deatils = { _id: new ObjectID(id) };
@@ -40,5 +54,20 @@ module.exports = function (app, db) {
           res.send(lists);
         }
       });
+  });
+
+  app.put('/list/:id', function (req, res) {
+    const id = req.params.id;
+    const deatils = { _id: new ObjectID(id) };
+    const list = { name: req.body.name, items: req.body.items };
+
+    db.collection('testCol').update(deatils, list, (err, item) => {
+      if (err) {
+        console.log(err);
+        res.send({ error: 'An error has occured' });
+      } else {
+        res.send(item);
+      }
+    });
   });
 };
