@@ -1,8 +1,13 @@
 const express = require('express');
+const MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
+
 const app = express();
 
-app.listen(3001, function() {
-  console.log('Listening on 3001...')
+const port = 3001;
+
+app.listen(port, function() {
+  console.log('Listening on', port);
 })
 
 app.get('/lists', function (req, res) {
