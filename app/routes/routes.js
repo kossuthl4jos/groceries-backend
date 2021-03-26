@@ -1,33 +1,26 @@
-var ObjectID = require('mongodb').ObjectID;
 var dbApi = require('../data-base/db-api');
 
 module.exports = function (app, db) {
-  app.post('/list', (req, res) => {
-    console.log(req.body);
+  app.post('/list', async (req, res) => {
     const list = { name: req.body.name, items: req.body.items };
 
-    db.collection('testCol').insertOne(list, (err, result) => {
-      if (err) {
-        console.log(err);
-        res.send({ error: 'An error has occured' });
-      } else {
-        res.send(result.ops[0]);
-      }
-    });
+    try {
+      const document = await dbApi.addList(db, list);
+      res.send(document);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
   });
 
-  app.get('/list/:id', function (req, res) {
+  app.get('/list/:id', async function (req, res) {
     const id = req.params.id;
-    const deatils = { _id: new ObjectID(id) };
 
-    db.collection('testCol').findOne(deatils, (err, item) => {
-      if (err) {
-        console.log(err);
-        res.send({ error: 'An error has occured' });
-      } else {
-        res.send(item);
-      }
-    });
+    try {
+      const document = await dbApi.getList(db, id);
+      res.send(document);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
   });
 
   app.get('/list', async function (req, res) {
@@ -35,37 +28,30 @@ module.exports = function (app, db) {
       const documents = await dbApi.getAllLists(db);
       res.send(documents);
     } catch (error) {
-      // or something along those lines
       res.status(500).send({ error: error.message });
     }
   });
 
-  app.put('/list/:id', function (req, res) {
+  app.put('/list/:id', async function (req, res) {
     const id = req.params.id;
-    const deatils = { _id: new ObjectID(id) };
     const list = { name: req.body.name, items: req.body.items };
 
-    db.collection('testCol').updateOne(deatils, list, (err, item) => {
-      if (err) {
-        console.log(err);
-        res.send({ error: 'An error has occured' });
-      } else {
-        res.send(item);
-      }
-    });
+    try {
+      const documents = await dbApi.updateList(db, id, list);
+      res.send(documents);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
   });
 
-  app.delete('/list/:id', function (req, res) {
+  app.delete('/list/:id', async function (req, res) {
     const id = req.params.id;
-    const deatils = { _id: new ObjectID(id) };
 
-    db.collection('testCol').deleteOne(deatils, (err, item) => {
-      if (err) {
-        console.log(err);
-        res.send({ error: 'An error has occured' });
-      } else {
-        res.send('List ' + id + ' deleted!');
-      }
-    });
+    try {
+      const documents = await dbApi.deleteList(db, id);
+      res.send(documents);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
   });
 };
