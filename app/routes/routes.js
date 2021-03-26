@@ -1,6 +1,6 @@
 module.exports = function (app, db) {
   app.post('/lists', (req, res)=> {
-    // create lists here
+    console.log(req.body);
     res.send('Creating lists...');
   })
 
