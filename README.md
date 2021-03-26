@@ -1,2 +1,2 @@
 # groceries-backend
-Basic Node.js project to support Groceries front-end
+Basic Node.js project with MongoDB to support Groceries front-end
