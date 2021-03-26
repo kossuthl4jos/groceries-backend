@@ -3,7 +3,7 @@ var ObjectID = require('mongodb').ObjectID;
 module.exports = function (app, db) {
   app.post('/list', (req, res) => {
     console.log(req.body);
-    const list = req.body;
+    const list = { name: req.body.name, items: req.body.items };
 
     db.collection('testCol').insertOne(list, (err, result) => {
       if (err) {
