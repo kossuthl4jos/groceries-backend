@@ -1,12 +1,44 @@
+var ObjectID = require('mongodb').ObjectID;
+
 module.exports = function (app, db) {
-  app.post('/lists', (req, res)=> {
+  app.post('/list', (req, res)=> {
     console.log(req.body);
-    res.send('Creating lists...');
+    const list = req.body;
+
+    db.collection("testCol").insertOne(list, (err, result) => {
+      if(err) {
+        console.log(err);
+        res.send({'error': 'An error has occured'});
+      } else {
+        res.send(result.ops[0]);
+      }
+    });
   })
 
-  app.get('/lists', function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Fetching lists... ');
+  app.get('/list/:id', function (req, res) {
+    const id = req.params.id
+    const deatils = { '_id': new ObjectID(id)};
+
+    db.collection("testCol").findOne(deatils, (err, item) => {
+      if(err) {
+        console.log(err);
+        res.send({'error': 'An error has occured'});
+      } else {
+        res.send(item);
+      }
+    });
+  })
+
+  app.get('/list', function (req, res) {
+
+    db.collection("testCol").find({}).toArray(function(err, lists) {
+      if (err) {
+        console.log(err);
+        res.send({'error': 'An error has occured'});
+      } else {
+        res.send(lists);
+      }
+    });
   })
 
 }
