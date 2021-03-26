@@ -61,7 +61,7 @@ module.exports = function (app, db) {
     const deatils = { _id: new ObjectID(id) };
     const list = { name: req.body.name, items: req.body.items };
 
-    db.collection('testCol').update(deatils, list, (err, item) => {
+    db.collection('testCol').updateOne(deatils, list, (err, item) => {
       if (err) {
         console.log(err);
         res.send({ error: 'An error has occured' });
