@@ -1,5 +1,5 @@
 const express = require('express');
-var cors = require('cors')
+var cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -7,7 +7,8 @@ const app = express();
 const port = 3001;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 const MongoClient = require('mongodb').MongoClient;
 const fs = require('fs');
