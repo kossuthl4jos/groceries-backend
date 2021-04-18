@@ -1,12 +1,10 @@
 var dbApi = require('../data-base/db-api');
 
 module.exports = function (app, db) {
-  app.post('/list', async (req, res) => {
-    const list = { name: req.body.name, items: req.body.items };
-
+  app.get('/list', async function (req, res) {
     try {
-      const document = await dbApi.addList(db, list);
-      res.send(document);
+      const documents = await dbApi.getAllLists(db);
+      res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -23,10 +21,12 @@ module.exports = function (app, db) {
     }
   });
 
-  app.get('/list', async function (req, res) {
+  app.post('/list', async (req, res) => {
+    const list = { name: req.body.name, items: req.body.items };
+
     try {
-      const documents = await dbApi.getAllLists(db);
-      res.send(documents);
+      const document = await dbApi.addList(db, list);
+      res.send(document);
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -50,6 +50,42 @@ module.exports = function (app, db) {
     try {
       const documents = await dbApi.deleteList(db, id);
       res.send(documents);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+  app.get('/login', async function (req, res) {
+    const user = { name: req.body.userName, password: req.body.password };
+
+    try {
+      const documents = await dbApi.getAllUsers(db);
+
+      documents.forEach((document) => {
+        if (document.name === user.name && document.password === user.password) {
+          res.status(200).send({ _id: document._id });
+        }
+      });
+
+      if (res.finished === false) {
+        throw new Error('User was not found');
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+  app.post('/signup', async function (req, res) {
+    const user = { name: req.body.userName, password: req.body.password };
+
+    try {
+      const documents = await dbApi.getAllUsers(db);
+      if (documents.find((d) => d.name === user.name) == null) {
+        const document = await dbApi.addUser(db, user);
+        res.send(document);
+      } else {
+        throw new Error('User already exists');
+      }
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

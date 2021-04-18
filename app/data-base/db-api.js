@@ -1,5 +1,6 @@
 var ObjectID = require('mongodb').ObjectID;
 const LISTS_COLLECTION = 'testCol';
+const USERS = 'Users';
 
 module.exports = {
   addList: async function (db, list) {
@@ -27,5 +28,13 @@ module.exports = {
 
     const query = await db.collection(LISTS_COLLECTION).deleteOne(deatils);
     return query;
+  },
+  getAllUsers: async function (db) {
+    const query = await db.collection(USERS).find({});
+    return query.toArray();
+  },
+  addUser: async function (db, user) {
+    const query = await db.collection(USERS).insertOne(user);
+    return query.ops[0];
   },
 };
