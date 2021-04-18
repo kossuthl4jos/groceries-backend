@@ -1,5 +1,5 @@
-const dbApi = require('./db-api');
+import dbApi from './db-api';
 
-module.exports = function (db) {
+export default function (db) {
   dbApi(db);
-};
+}

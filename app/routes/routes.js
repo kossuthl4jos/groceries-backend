@@ -1,9 +1,17 @@
-var dbApi = require('../data-base/db-api');
+import {
+  getAllLists,
+  getList,
+  addList,
+  updateList,
+  deleteList,
+  getAllUsers,
+  addUser,
+} from '../data-base/db-api';
 
-module.exports = function (app, db) {
+export default function (app, db) {
   app.get('/list', async function (req, res) {
     try {
-      const documents = await dbApi.getAllLists(db);
+      const documents = await getAllLists(db);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -14,7 +22,7 @@ module.exports = function (app, db) {
     const id = req.params.id;
 
     try {
-      const document = await dbApi.getList(db, id);
+      const document = await getList(db, id);
       res.send(document);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -25,7 +33,7 @@ module.exports = function (app, db) {
     const list = { name: req.body.name, items: req.body.items };
 
     try {
-      const document = await dbApi.addList(db, list);
+      const document = await addList(db, list);
       res.send(document);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -37,7 +45,7 @@ module.exports = function (app, db) {
     const list = { name: req.body.name, items: req.body.items };
 
     try {
-      const documents = await dbApi.updateList(db, id, list);
+      const documents = await updateList(db, id, list);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -48,7 +56,7 @@ module.exports = function (app, db) {
     const id = req.params.id;
 
     try {
-      const documents = await dbApi.deleteList(db, id);
+      const documents = await deleteList(db, id);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -59,7 +67,7 @@ module.exports = function (app, db) {
     const user = { name: req.body.userName, password: req.body.password };
 
     try {
-      const documents = await dbApi.getAllUsers(db);
+      const documents = await getAllUsers(db);
 
       documents.forEach((document) => {
         if (document.name === user.name && document.password === user.password) {
@@ -79,9 +87,9 @@ module.exports = function (app, db) {
     const user = { name: req.body.userName, password: req.body.password };
 
     try {
-      const documents = await dbApi.getAllUsers(db);
+      const documents = await getAllUsers(db);
       if (documents.find((d) => d.name === user.name) == null) {
-        const document = await dbApi.addUser(db, user);
+        const document = await addUser(db, user);
         res.send(document);
       } else {
         throw new Error('User already exists');
@@ -90,4 +98,4 @@ module.exports = function (app, db) {
       res.status(500).send({ error: error.message });
     }
   });
-};
+}
