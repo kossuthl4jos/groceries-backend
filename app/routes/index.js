@@ -1,5 +1,5 @@
-import routes from './routes';
+const routes = require('./routes');
 
-export default function (app, db) {
+module.exports = function (app, db) {
   routes(app, db);
-}
+};

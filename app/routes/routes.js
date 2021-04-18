@@ -1,17 +1,9 @@
-import {
-  getAllLists,
-  getList,
-  addList,
-  updateList,
-  deleteList,
-  getAllUsers,
-  addUser,
-} from '../data-base/db-api';
+var dbApi = require('../data-base/db-api');
 
-export default function (app, db) {
+module.exports = function (app, db) {
   app.get('/list', async function (req, res) {
     try {
-      const documents = await getAllLists(db);
+      const documents = await dbApi.getAllLists(db);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -22,7 +14,7 @@ export default function (app, db) {
     const id = req.params.id;
 
     try {
-      const document = await getList(db, id);
+      const document = await dbApi.getList(db, id);
       res.send(document);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -33,7 +25,7 @@ export default function (app, db) {
     const list = { name: req.body.name, items: req.body.items };
 
     try {
-      const document = await addList(db, list);
+      const document = await dbApi.addList(db, list);
       res.send(document);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -45,7 +37,7 @@ export default function (app, db) {
     const list = { name: req.body.name, items: req.body.items };
 
     try {
-      const documents = await updateList(db, id, list);
+      const documents = await dbApi.updateList(db, id, list);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -56,7 +48,7 @@ export default function (app, db) {
     const id = req.params.id;
 
     try {
-      const documents = await deleteList(db, id);
+      const documents = await dbApi.deleteList(db, id);
       res.send(documents);
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -65,18 +57,18 @@ export default function (app, db) {
 
   app.get('/login', async function (req, res) {
     const user = { name: req.body.userName, password: req.body.password };
-
     try {
-      const documents = await getAllUsers(db);
+      const documents = await dbApi.getAllUsers(db);
 
       documents.forEach((document) => {
         if (document.name === user.name && document.password === user.password) {
+          console.log('All set, match found');
           res.status(200).send({ _id: document._id });
         }
       });
 
       if (res.finished === false) {
-        throw new Error('User was not found');
+        res.status(404).send({ error: 'User was not found' });
       }
     } catch (error) {
       res.status(500).send({ error: error.message });
@@ -87,7 +79,7 @@ export default function (app, db) {
     const user = { name: req.body.userName, password: req.body.password };
 
     try {
-      const documents = await getAllUsers(db);
+      const documents = await dbApi.getAllUsers(db);
       if (documents.find((d) => d.name === user.name) == null) {
         const document = await addUser(db, user);
         res.send(document);
@@ -98,4 +90,4 @@ export default function (app, db) {
       res.status(500).send({ error: error.message });
     }
   });
-}
+};
