@@ -55,7 +55,7 @@ module.exports = function (app, db) {
     }
   });
 
-  app.get('/login', async function (req, res) {
+  app.post('/login', async function (req, res) {
     const user = { name: req.body.userName, password: req.body.password };
     try {
       const documents = await dbApi.getAllUsers(db);
