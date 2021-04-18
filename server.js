@@ -22,15 +22,18 @@ async function run() {
   try {
     await client.connect();
     const database = client.db('testDB');
-    const collection = database.collection('testCol');
+    const listCollection = database.collection('testCol');
+    const userCollection = database.collection('Users');
 
     require('./app/routes')(app, database);
     app.listen(port, function () {
       console.log('Listening on', port);
     });
 
-    const docCount = await collection.countDocuments({});
-    console.log('Current number of documents: ', docCount);
+    const listDocCount = await listCollection.countDocuments({});
+    const userDocCount = await userCollection.countDocuments({});
+    console.log('Current number of documents in lists: ', listDocCount);
+    console.log('Current number of documents in users: ', userDocCount);
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
